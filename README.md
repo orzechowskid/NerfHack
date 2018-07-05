@@ -16,6 +16,8 @@ That should give you a modified version of the latest NetHack release.
 
 4. `sudo apt install build-essential` (or your platform's equivalent)
 
+then just follow the NetHack build instructions (and, optionally, the installation instructions too).
+
 ## What if it doesn't work?
 
 - it's possible you're trying to patch a version of NetHack that's too old.  Make sure your NetHack source repo is up-to-date.
