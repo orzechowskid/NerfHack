@@ -22,6 +22,7 @@ then just follow the NetHack build instructions (and, optionally, the installati
 
 - it's possible you're trying to patch a version of NetHack that's too old.  Make sure your NetHack source repo is up-to-date.
 - it's possible you're trying to patch a version of NetHack that's too new.  Open an issue, or even better a pull request!, and I'll get around to fixing it.  Don't open an issue against the main NetHack source repo; the Dev Team (rightly) refuses to provide support for code that's not theirs.
+- your system might not have all dependencies needed to build NH.  If you're running a newer Ubuntu install, try `sudo apt install build-essential libncurses-dev flex byacc` maybe.  If you're not running a newer Ubuntu install, you're on your own.
 
 ## License
 
