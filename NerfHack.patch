@@ -1,5 +1,5 @@
 diff --git a/src/fountain.c b/src/fountain.c
-index 616d42b4..f3664768 100644
+index 57e91455..01f9d801 100644
 --- a/src/fountain.c
 +++ b/src/fountain.c
 @@ -67,7 +67,7 @@ dowaterdemon()
@@ -11,7 +11,7 @@ index 616d42b4..f3664768 100644
                  pline("Grateful for %s release, %s grants you a wish!",
                        mhis(mtmp), mhe(mtmp));
                  /* give a wish and discard the monster (mtmp set to null) */
-@@ -224,7 +224,7 @@ drinkfountain()
+@@ -223,7 +223,7 @@ drinkfountain()
  {
      /* What happens when you drink from a fountain? */
      register boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
@@ -20,7 +20,7 @@ index 616d42b4..f3664768 100644
  
      if (Levitation) {
          floating_above("fountain");
-@@ -301,11 +301,12 @@ drinkfountain()
+@@ -300,11 +300,12 @@ drinkfountain()
              morehungry(rn1(20, 11));
              exercise(A_CON, FALSE);
              for (obj = invent; obj; obj = obj->nobj)
@@ -34,7 +34,7 @@ index 616d42b4..f3664768 100644
              if (Blind) {
                  if (Invisible) {
                      You("feel transparent.");
-@@ -322,6 +323,7 @@ drinkfountain()
+@@ -321,6 +322,7 @@ drinkfountain()
              exercise(A_WIS, TRUE);
              break;
          case 26: /* See Monsters */
@@ -43,10 +43,10 @@ index 616d42b4..f3664768 100644
              exercise(A_WIS, TRUE);
              break;
 diff --git a/src/mklev.c b/src/mklev.c
-index 5f6afff4..bfd02ffa 100644
+index 7448feb4..70be2110 100644
 --- a/src/mklev.c
 +++ b/src/mklev.c
-@@ -823,7 +823,7 @@ skip0:
+@@ -824,7 +824,7 @@ makelevel()
              mkfount(0, croom);
          if (!rn2(60))
              mksink(croom);
@@ -55,7 +55,7 @@ index 5f6afff4..bfd02ffa 100644
              mkaltar(croom);
          x = 80 - (depth(&u.uz) * 2);
          if (x < 2)
-@@ -1555,7 +1555,7 @@ struct mkroom *croom;
+@@ -1572,7 +1572,7 @@ struct mkroom *croom;
      /* Put a fountain at m.x, m.y */
      levl[m.x][m.y].typ = FOUNTAIN;
      /* Is it a "blessed" fountain? (affects drinking from fountain) */
@@ -65,10 +65,10 @@ index 5f6afff4..bfd02ffa 100644
  
      level.flags.nfountains++;
 diff --git a/src/mkobj.c b/src/mkobj.c
-index 1724cded..33b015b6 100644
+index 195de0b4..cee667b1 100644
 --- a/src/mkobj.c
 +++ b/src/mkobj.c
-@@ -28,23 +28,23 @@ static const struct icp mkobjprobs[] = { { 10, WEAPON_CLASS },
+@@ -29,23 +29,23 @@ static const struct icp mkobjprobs[] = { { 10, WEAPON_CLASS },
                                           { 10, ARMOR_CLASS },
                                           { 20, FOOD_CLASS },
                                           { 8, TOOL_CLASS },
@@ -100,7 +100,7 @@ index 1724cded..33b015b6 100644
  
  static const struct icp rogueprobs[] = { { 12, WEAPON_CLASS },
                                           { 12, ARMOR_CLASS },
-@@ -768,7 +768,7 @@ boolean artif;
+@@ -804,7 +804,7 @@ boolean artif;
          case WEAPON_CLASS:
              otmp->quan = is_multigen(otmp) ? (long) rn1(6, 6) : 1L;
              if (!rn2(11)) {
@@ -109,7 +109,7 @@ index 1724cded..33b015b6 100644
                  otmp->blessed = rn2(2);
              } else if (!rn2(10)) {
                  curse(otmp);
-@@ -963,7 +963,7 @@ boolean artif;
+@@ -999,7 +999,7 @@ boolean artif;
                  otmp->spe = -rne(3);
              } else if (!rn2(10)) {
                  otmp->blessed = rn2(2);
@@ -118,7 +118,7 @@ index 1724cded..33b015b6 100644
              } else
                  blessorcurse(otmp, 10);
              if (artif && !rn2(40))
-@@ -1336,7 +1336,7 @@ register int chance;
+@@ -1372,7 +1372,7 @@ register int chance;
          return;
  
      if (!rn2(chance)) {
@@ -128,10 +128,10 @@ index 1724cded..33b015b6 100644
          } else {
              bless(otmp);
 diff --git a/src/pickup.c b/src/pickup.c
-index fae1e2f0..352d6549 100644
+index 8842e140..3602cfa3 100644
 --- a/src/pickup.c
 +++ b/src/pickup.c
-@@ -2063,7 +2063,7 @@ int held;
+@@ -2080,7 +2080,7 @@ int held;
  
          for (curr = container->cobj; curr; curr = otmp) {
              otmp = curr->nobj;
@@ -141,36 +141,24 @@ index fae1e2f0..352d6549 100644
                  loss += mbag_item_gone(held, curr);
              }
 diff --git a/src/pray.c b/src/pray.c
-index d0cb794a..b7b27074 100644
+index bc9a9ba8..71abb352 100644
 --- a/src/pray.c
 +++ b/src/pray.c
-@@ -1716,7 +1716,7 @@ dosacrifice()
+@@ -1737,7 +1737,7 @@ dosacrifice()
              /* The player can gain an artifact */
              /* The chance goes down as the number of artifacts goes up */
              if (u.ulevel > 2 && u.uluck >= 0
 -                && !rn2(10 + (2 * u.ugifts * nartifacts))) {
-+                && !rn2(10 + (2 * (u.ugifts + nartifacts)))) {
++                && !rn2(10 + (2 * u.ugifts + nartifacts))) {
                  otmp = mk_artifact((struct obj *) 0, a_align(u.ux, u.uy));
                  if (otmp) {
                      if (otmp->spe < 0)
-diff --git a/src/restore.c b/src/restore.c
-index b967e146..993596ef 100644
---- a/src/restore.c
-+++ b/src/restore.c
-@@ -334,7 +334,6 @@ struct monst *mtmp;
-     int buflen;
- 
-     mread(fd, (genericptr_t) mtmp, sizeof(struct monst));
--
-     /* next monster pointer is invalid */
-     mtmp->nmon = (struct monst *) 0;
-     /* non-null mextra needs to be reconstructed */
 diff --git a/src/timeout.c b/src/timeout.c
-index a469eb11..e7767f13 100644
+index a4408de5..5e7cbb01 100644
 --- a/src/timeout.c
 +++ b/src/timeout.c
-@@ -369,7 +369,7 @@ nh_timeout()
-     struct kinfo *kptr;
+@@ -453,7 +453,7 @@ nh_timeout()
+     boolean was_flying;
      int sleeptime;
      int m_idx;
 -    int baseluck = (flags.moonphase == FULL_MOON) ? 1 : 0;
