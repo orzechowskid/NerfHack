@@ -1,5 +1,5 @@
 diff --git a/src/fountain.c b/src/fountain.c
-index 57e91455..01f9d801 100644
+index 57e914559..01f9d801f 100644
 --- a/src/fountain.c
 +++ b/src/fountain.c
 @@ -67,7 +67,7 @@ dowaterdemon()
@@ -43,7 +43,7 @@ index 57e91455..01f9d801 100644
              exercise(A_WIS, TRUE);
              break;
 diff --git a/src/mklev.c b/src/mklev.c
-index 7448feb4..70be2110 100644
+index 7448feb41..70be21105 100644
 --- a/src/mklev.c
 +++ b/src/mklev.c
 @@ -824,7 +824,7 @@ makelevel()
@@ -65,7 +65,7 @@ index 7448feb4..70be2110 100644
  
      level.flags.nfountains++;
 diff --git a/src/mkobj.c b/src/mkobj.c
-index 195de0b4..cee667b1 100644
+index 195de0b4a..cee667b11 100644
 --- a/src/mkobj.c
 +++ b/src/mkobj.c
 @@ -29,23 +29,23 @@ static const struct icp mkobjprobs[] = { { 10, WEAPON_CLASS },
@@ -128,7 +128,7 @@ index 195de0b4..cee667b1 100644
          } else {
              bless(otmp);
 diff --git a/src/pickup.c b/src/pickup.c
-index 8842e140..3602cfa3 100644
+index 8842e140b..3602cfa39 100644
 --- a/src/pickup.c
 +++ b/src/pickup.c
 @@ -2080,7 +2080,7 @@ int held;
@@ -141,7 +141,7 @@ index 8842e140..3602cfa3 100644
                  loss += mbag_item_gone(held, curr);
              }
 diff --git a/src/pray.c b/src/pray.c
-index bc9a9ba8..71abb352 100644
+index bc9a9ba82..71abb3523 100644
 --- a/src/pray.c
 +++ b/src/pray.c
 @@ -1737,7 +1737,7 @@ dosacrifice()
@@ -154,7 +154,7 @@ index bc9a9ba8..71abb352 100644
                  if (otmp) {
                      if (otmp->spe < 0)
 diff --git a/src/timeout.c b/src/timeout.c
-index a4408de5..5e7cbb01 100644
+index a4408de5c..5e7cbb019 100644
 --- a/src/timeout.c
 +++ b/src/timeout.c
 @@ -453,7 +453,7 @@ nh_timeout()
@@ -166,3 +166,16 @@ index a4408de5..5e7cbb01 100644
  
      if (flags.friday13)
          baseluck -= 1;
+diff --git a/src/trap.c b/src/trap.c
+index 02d1030ef..e1267e605 100644
+--- a/src/trap.c
++++ b/src/trap.c
+@@ -1248,7 +1248,7 @@ unsigned trflags;
+                                 ? "stumbled into a pit of iron spikes"
+                                 : "fell into a pit of iron spikes",
+                        NO_KILLER_PREFIX);
+-                if (!rn2(6))
++                if (!rn2(10))
+                     poisoned("spikes", A_STR,
+                              (conj_pit || adj_pit)
+                                 ? "stepping on poison spikes"
