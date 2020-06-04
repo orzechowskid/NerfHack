@@ -1,5 +1,5 @@
 diff --git a/src/fountain.c b/src/fountain.c
-index 57e914559..01f9d801f 100644
+index 14b5a5a9f..6c6b208c3 100644
 --- a/src/fountain.c
 +++ b/src/fountain.c
 @@ -67,7 +67,7 @@ dowaterdemon()
@@ -11,7 +11,7 @@ index 57e914559..01f9d801f 100644
                  pline("Grateful for %s release, %s grants you a wish!",
                        mhis(mtmp), mhe(mtmp));
                  /* give a wish and discard the monster (mtmp set to null) */
-@@ -223,7 +223,7 @@ drinkfountain()
+@@ -230,7 +230,7 @@ drinkfountain()
  {
      /* What happens when you drink from a fountain? */
      register boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
@@ -20,13 +20,16 @@ index 57e914559..01f9d801f 100644
  
      if (Levitation) {
          floating_above("fountain");
-@@ -300,11 +300,12 @@ drinkfountain()
-             morehungry(rn1(20, 11));
+@@ -309,7 +309,7 @@ drinkfountain()
              exercise(A_CON, FALSE);
-             for (obj = invent; obj; obj = obj->nobj)
--                if (!rn2(5))
-+                if (!rn2(7))
+             /* this is more severe than rndcurse() */
+             for (obj = g.invent; obj; obj = obj->nobj)
+-                if (obj->oclass != COIN_CLASS && !obj->cursed && !rn2(5)) {
++                if (obj->oclass != COIN_CLASS && !obj->cursed && !rn2(7)) {
                      curse(obj);
+                     ++buc_changed;
+                 }
+@@ -318,6 +318,7 @@ drinkfountain()
              break;
          }
          case 25: /* See invisible */
@@ -34,7 +37,7 @@ index 57e914559..01f9d801f 100644
              if (Blind) {
                  if (Invisible) {
                      You("feel transparent.");
-@@ -321,6 +322,7 @@ drinkfountain()
+@@ -334,6 +335,7 @@ drinkfountain()
              exercise(A_WIS, TRUE);
              break;
          case 26: /* See Monsters */
@@ -43,10 +46,10 @@ index 57e914559..01f9d801f 100644
              exercise(A_WIS, TRUE);
              break;
 diff --git a/src/mklev.c b/src/mklev.c
-index 7448feb41..70be21105 100644
+index 007262ea0..ecd9ab3aa 100644
 --- a/src/mklev.c
 +++ b/src/mklev.c
-@@ -824,7 +824,7 @@ makelevel()
+@@ -901,7 +901,7 @@ makelevel()
              mkfount(0, croom);
          if (!rn2(60))
              mksink(croom);
@@ -55,7 +58,7 @@ index 7448feb41..70be21105 100644
              mkaltar(croom);
          x = 80 - (depth(&u.uz) * 2);
          if (x < 2)
-@@ -1572,7 +1572,7 @@ struct mkroom *croom;
+@@ -1725,7 +1725,7 @@ struct mkroom *croom;
      /* Put a fountain at m.x, m.y */
      levl[m.x][m.y].typ = FOUNTAIN;
      /* Is it a "blessed" fountain? (affects drinking from fountain) */
@@ -63,12 +66,12 @@ index 7448feb41..70be21105 100644
 +    if (!rn2(5))
          levl[m.x][m.y].blessedftn = 1;
  
-     level.flags.nfountains++;
+     g.level.flags.nfountains++;
 diff --git a/src/mkobj.c b/src/mkobj.c
-index 195de0b4a..cee667b11 100644
+index 4ef6852f2..8a306a1b6 100644
 --- a/src/mkobj.c
 +++ b/src/mkobj.c
-@@ -29,23 +29,23 @@ static const struct icp mkobjprobs[] = { { 10, WEAPON_CLASS },
+@@ -30,23 +30,23 @@ static const struct icp mkobjprobs[] = { { 10, WEAPON_CLASS },
                                           { 10, ARMOR_CLASS },
                                           { 20, FOOD_CLASS },
                                           { 8, TOOL_CLASS },
@@ -100,7 +103,7 @@ index 195de0b4a..cee667b11 100644
  
  static const struct icp rogueprobs[] = { { 12, WEAPON_CLASS },
                                           { 12, ARMOR_CLASS },
-@@ -804,7 +804,7 @@ boolean artif;
+@@ -770,7 +770,7 @@ boolean artif;
          case WEAPON_CLASS:
              otmp->quan = is_multigen(otmp) ? (long) rn1(6, 6) : 1L;
              if (!rn2(11)) {
@@ -109,7 +112,7 @@ index 195de0b4a..cee667b11 100644
                  otmp->blessed = rn2(2);
              } else if (!rn2(10)) {
                  curse(otmp);
-@@ -999,7 +999,7 @@ boolean artif;
+@@ -966,7 +966,7 @@ boolean artif;
                  otmp->spe = -rne(3);
              } else if (!rn2(10)) {
                  otmp->blessed = rn2(2);
@@ -118,7 +121,7 @@ index 195de0b4a..cee667b11 100644
              } else
                  blessorcurse(otmp, 10);
              if (artif && !rn2(40))
-@@ -1372,7 +1372,7 @@ register int chance;
+@@ -1343,7 +1343,7 @@ register int chance;
          return;
  
      if (!rn2(chance)) {
@@ -128,23 +131,23 @@ index 195de0b4a..cee667b11 100644
          } else {
              bless(otmp);
 diff --git a/src/pickup.c b/src/pickup.c
-index 8842e140b..3602cfa39 100644
+index bd17ab0f9..6f7cbac06 100644
 --- a/src/pickup.c
 +++ b/src/pickup.c
-@@ -2080,7 +2080,7 @@ int held;
+@@ -2209,7 +2209,7 @@ int depthin;
+ static boolean
+ is_boh_item_gone()
+ {
+-    return (boolean) (!rn2(13));
++    return (boolean) (!rn2(20));
+ }
  
-         for (curr = container->cobj; curr; curr = otmp) {
-             otmp = curr->nobj;
--            if (!rn2(13)) {
-+            if (!rn2(20)) {
-                 obj_extract_self(curr);
-                 loss += mbag_item_gone(held, curr);
-             }
+ /* Scatter most of Bag of holding contents around.
 diff --git a/src/pray.c b/src/pray.c
-index bc9a9ba82..71abb3523 100644
+index e0f104601..63c1bbc01 100644
 --- a/src/pray.c
 +++ b/src/pray.c
-@@ -1737,7 +1737,7 @@ dosacrifice()
+@@ -1765,7 +1765,7 @@ dosacrifice()
              /* The player can gain an artifact */
              /* The chance goes down as the number of artifacts goes up */
              if (u.ulevel > 2 && u.uluck >= 0
@@ -154,10 +157,10 @@ index bc9a9ba82..71abb3523 100644
                  if (otmp) {
                      if (otmp->spe < 0)
 diff --git a/src/timeout.c b/src/timeout.c
-index a4408de5c..5e7cbb019 100644
+index d1494b73d..bf9786204 100644
 --- a/src/timeout.c
 +++ b/src/timeout.c
-@@ -453,7 +453,7 @@ nh_timeout()
+@@ -487,7 +487,7 @@ nh_timeout()
      boolean was_flying;
      int sleeptime;
      int m_idx;
@@ -167,10 +170,10 @@ index a4408de5c..5e7cbb019 100644
      if (flags.friday13)
          baseluck -= 1;
 diff --git a/src/trap.c b/src/trap.c
-index 02d1030ef..e1267e605 100644
+index b94f2c7cd..45eb8c2e5 100644
 --- a/src/trap.c
 +++ b/src/trap.c
-@@ -1248,7 +1248,7 @@ unsigned trflags;
+@@ -1272,7 +1272,7 @@ unsigned trflags;
                                  ? "stumbled into a pit of iron spikes"
                                  : "fell into a pit of iron spikes",
                         NO_KILLER_PREFIX);
